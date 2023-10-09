@@ -6,12 +6,17 @@
 /**
  * Exclusive-or gate:
  * out = not (a == b)
+ * In the truth table of a And b, result of 00,01,10 are all 0, result of 11 is 1.
+ * Hence, there is no way to distinguish "equal" or "not equal".
+ * By using a And notB | notA And b, result of 00,11 are 0, while result of 01,10 are 1.
+ * Thus, the condition of "equal" or "not equal" can be distinguished.
  */
 
 CHIP Xor {
     IN a, b;
     OUT out;
 
+    // Put your code here: Done
     PARTS:
     Not(in=a, out=nota);
     Not(in=b, out=notb);

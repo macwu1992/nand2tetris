@@ -16,5 +16,25 @@ CHIP DMux8Way {
     OUT a, b, c, d, e, f, g, h;
 
     PARTS:
-    // Put your code here:
+    // Put your code here: Done
+    Not(in=sel[0], out=notSel0);
+    Not(in=sel[1], out=notSel1);
+    Not(in=sel[2], out=notSel2);
+
+    And(a=in, b=notSel2, out=layer0Val0);
+    And(a=in, b=sel[2], out=layer0Val1);
+
+    And(a=layer0Val0, b=notSel1, out=layer1Val0);
+    And(a=layer0Val0, b=sel[1], out=layer1Val1);
+    And(a=layer0Val1, b=notSel1, out=layer1Val2);
+    And(a=layer0Val1, b=sel[1], out=layer1Val3);
+
+    And(a=layer1Val0, b=notSel0, out=a);
+    And(a=layer1Val0, b=sel[0], out=b);
+    And(a=layer1Val1, b=notSel0, out=c);
+    And(a=layer1Val1, b=sel[0], out=d);
+    And(a=layer1Val2, b=notSel0, out=e);
+    And(a=layer1Val2, b=sel[0], out=f);
+    And(a=layer1Val3, b=notSel0, out=g);
+    And(a=layer1Val3, b=sel[0], out=h);
 }

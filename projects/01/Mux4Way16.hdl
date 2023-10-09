@@ -11,10 +11,40 @@
  *       d if sel == 11
  */
 
+/*
 CHIP Mux4Way16 {
     IN a[16], b[16], c[16], d[16], sel[2];
     OUT out[16];
 
     PARTS:
-    // Put your code here:
+    // Put your code here: Done
+    Not(in=sel[0], out=notSel0);
+    Not(in=sel[1], out=notSel1);
+
+    And16With1(a=a, val=notSel0, out=layer0SelA);
+    And16With1(a=b, val=sel[0], out=layer0SelB);
+    And16With1(a=c, val=notSel0, out=layer0SelC);
+    And16With1(a=d, val=sel[0], out=layer0SelD);
+
+    And16With1(a=layer0SelA, val=notSel1, out=layer1SelA);
+    And16With1(a=layer0SelB, val=notSel1, out=layer1SelB);
+    And16With1(a=layer0SelC, val=sel[1], out=layer1SelC);
+    And16With1(a=layer0SelD, val=sel[1], out=layer1SelD);
+
+    Or16(a=layer1SelA, b=layer1SelB, out=aOrB);
+    Or16(a=aOrB, b=layer1SelC, out=aOrBOrC);
+    Or16(a=aOrBOrC, b=layer1SelD, out=out);
+}
+*/
+
+CHIP Mux4Way16 {
+    IN a[16], b[16], c[16], d[16], sel[2];
+    OUT out[16];
+
+    PARTS:
+    // Put your code here: Done
+    Mux16(a=a, b=b, sel=sel[0], out=aMuxB);
+    Mux16(a=c, b=d, sel=sel[0], out=cMuxD);
+
+    Mux16(a=aMuxB, b=cMuxD, sel=sel[1], out=out);
 }

@@ -11,6 +11,7 @@
  *       h if sel == 111
  */
 
+/*
 CHIP Mux8Way16 {
     IN a[16], b[16], c[16], d[16],
        e[16], f[16], g[16], h[16],
@@ -18,5 +19,63 @@ CHIP Mux8Way16 {
     OUT out[16];
 
     PARTS:
-    // Put your code here:
+    // Put your code here: Done
+    Not(in=sel[0], out=notSel0);
+    Not(in=sel[1], out=notSel1);
+    Not(in=sel[2], out=notSel2);
+
+    And16With1(a=a, val=notSel0, out=selA0);
+    And16With1(a=b, val=sel[0], out=selB0);
+    And16With1(a=c, val=notSel0, out=selC0);
+    And16With1(a=d, val=sel[0], out=selD0);
+    And16With1(a=e, val=notSel0, out=selE0);
+    And16With1(a=f, val=sel[0], out=selF0);
+    And16With1(a=g, val=notSel0, out=selG0);
+    And16With1(a=h, val=sel[0], out=selH0);
+
+    And16With1(a=selA0, val=notSel1, out=selA1);
+    And16With1(a=selB0, val=notSel1, out=selB1);
+    And16With1(a=selC0, val=sel[1], out=selC1);
+    And16With1(a=selD0, val=sel[1], out=selD1);
+    And16With1(a=selE0, val=notSel1, out=selE1);
+    And16With1(a=selF0, val=notSel1, out=selF1);
+    And16With1(a=selG0, val=sel[1], out=selG1);
+    And16With1(a=selH0, val=sel[1], out=selH1);
+
+    And16With1(a=selA1, val=notSel2, out=selA2);
+    And16With1(a=selB1, val=notSel2, out=selB2);
+    And16With1(a=selC1, val=notSel2, out=selC2);
+    And16With1(a=selD1, val=notSel2, out=selD2);
+    And16With1(a=selE1, val=sel[2], out=selE2);
+    And16With1(a=selF1, val=sel[2], out=selF2);
+    And16With1(a=selG1, val=sel[2], out=selG2);
+    And16With1(a=selH1, val=sel[2], out=selH2);
+
+    Or16(a=selA2, b=selB2, out=aOrB);
+    Or16(a=aOrB, b=selC2, out=aOrBOrC);
+    Or16(a=aOrBOrC, b=selD2, out=aOrBOrCOrD);
+    Or16(a=aOrBOrCOrD, b=selE2, out=aOrBOrCOrDOrE);
+    Or16(a=aOrBOrCOrDOrE, b=selF2, out=aOrBOrCOrDOrEOrF);
+    Or16(a=aOrBOrCOrDOrEOrF, b=selG2, out=aOrBOrCOrDOrEOrFOrG);
+    Or16(a=aOrBOrCOrDOrEOrFOrG, b=selH2, out=out);
+}
+*/
+
+CHIP Mux8Way16 {
+    IN a[16], b[16], c[16], d[16],
+       e[16], f[16], g[16], h[16],
+       sel[3];
+    OUT out[16];
+
+    PARTS:
+    // Put your code here: Done
+    Mux16(a=a, b=b, sel=sel[0], out=aMuxB);
+    Mux16(a=c, b=d, sel=sel[0], out=cMuxD);
+    Mux16(a=e, b=f, sel=sel[0], out=eMuxF);
+    Mux16(a=g, b=h, sel=sel[0], out=gMuxH);
+
+    Mux16(a=aMuxB, b=cMuxD, sel=sel[1], out=aBMuxCD);
+    Mux16(a=eMuxF, b=gMuxH, sel=sel[1], out=eFMuxHG);
+
+    Mux16(a=aBMuxCD, b=eFMuxHG, sel=sel[2], out=out);
 }
