@@ -1,0 +1,11 @@
+/*
+* And 16-bit a[16] with 1-bit val
+* for i in a[16] i and val
+*/
+CHIP And16With1 {
+    IN a[16], val;
+    OUT out[16];
+
+    PARTS:
+    And16(a=a, b[0]=val, b[1]=val, b[2]=val, b[3]=val, b[4]=val, b[5]=val, b[6]=val, b[7]=val, b[8]=val, b[9]=val, b[10]=val, b[11]=val, b[12]=val, b[13]=val, b[14]=val, b[15]=val, out=out);
+}
