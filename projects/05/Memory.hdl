@@ -28,4 +28,44 @@ CHIP Memory {
 
     PARTS:
     // Put your code here:
+    And(a=address[13], b=true, out=isAddress13True);
+    And(a=address[14], b=true, out=isAddress14True);
+
+    Or8Way(in=address[0..7], out=tmpOrAddr1);
+    Or8Way(in[0..4]=address[8..12], out=tmpOrAddr2);
+    Or(a=tmpOrAddr1, b=tmpOrAddr2, out=tmpOrAddr3);
+
+    And(a=isAddress14True, b=isAddress13True, out=isAddressHigh);
+    And(a=isAddressHigh, b=tmpOrAddr3, out=isAddrExceeded);
+
+    Mux16(a=in, b=false, sel=isAddrExceeded, out=tmpIn);
+    Mux(a=load, b=false, sel=isAddrExceeded, out=tmpLoad);
+
+    DMux4Way(in=true, sel[0]=isAddress13True, sel[1]=isAddress14True, a=isData1, b=isData2, c=isScreen, d=isKeyBoard);
+    Or(a=isData1, b=isData2, out=isData);
+
+    And(a=tmpLoad, b=isData, out=dataLoad);
+
+    RAM16K(in=tmpIn, load=dataLoad, address[0..13]=address[0..13], out=data);
+
+    DMux(in=isScreen, sel=address[12], a=screenTmpLoadLowTag, b=screenTmpLoadHighTag);
+
+    Mux16(a=false, b=tmpIn, sel=screenTmpLoadLowTag, out=screenTmpInLow);
+    Mux16(a=false, b=tmpIn, sel=screenTmpLoadHighTag, out=screenTmpInHigh);
+
+    And(a=tmpLoad, b=isScreen, out=screenLoad);
+
+    RAM4K(in=screenTmpInLow, load=screenLoad, address=address[0..11], out=screen1);
+    RAM4K(in=screenTmpInHigh, load=screenLoad, address=address[0..11], out=screen2);
+    Mux16(a=screen1, b=screen2, sel=screenTmpLoadHighTag, out=screen);
+
+    Keyboard(out=keyOut);
+
+    And(a=tmpLoad, b=isKeyBoard, out=keyboardLoad);
+
+    Mux16(a=false, b=keyOut, sel=isKeyBoard, out=keyIn);
+    RAM8(in=keyIn, load=keyboardLoad, address=false, out=key);
+
+    Mux4Way16(a=data, b=data, c=screen, d=key, sel[0]=isAddress13True, sel[1]=isAddress14True, out=tmpOut);
+    Mux16(a=tmpOut, b=false, sel=isAddrExceeded, out=out);
 }

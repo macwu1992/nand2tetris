@@ -177,7 +177,7 @@ set address %X47CF, eval, output;
 set address %X5FCF, eval, output;
 
 
-set load 0,
+set load 1,
 set address 24576,
 echo "Make sure you see ONLY two horizontal lines in the middle of the screen. Hold down 'Y' (uppercase) until you see the next message ...",
 // It's important to keep holding the key down since if the system is busy,
