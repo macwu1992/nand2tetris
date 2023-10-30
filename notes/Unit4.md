@@ -44,8 +44,8 @@ M registers - holds memory represents the register selected by A
 ### A-instruction (Addressing)
 Example: @21
 Sets A register to 21.
-The binary value of the symbol is 0 000000000000001
-The value is 15-bit, while the 16th bit is the op code, which mean it is A-instruction or C-instruction.
+The binary value of the symbol is 0 000000000010101
+The value is contained in last 15-bit, while the 16th bit is the op code, which mean it is A-instruction or C-instruction.
 
 //Set RAM[100] to -1
 @100 // A=100
