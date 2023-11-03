@@ -87,7 +87,7 @@ class Parser:
         return line
 
     def codeLines(__self__, lines):
-        linesWithoutSymbol = [__self__.code(lineNumber, lines[lineNumber]) for lineNumber in range(len(lines))]
+        linesWithoutSymbol = [__self__.codeBasicInstructions(lineNumber, lines[lineNumber]) for lineNumber in range(len(lines))]
         linesWithoutSymbol = [l for l in linesWithoutSymbol if l != '']
 
         linesLabelSymbol = [__self__.recordLableSymbol(lineNumber, linesWithoutSymbol[lineNumber]) for lineNumber in range(len(linesWithoutSymbol))]
@@ -101,7 +101,7 @@ class Parser:
 
         return linesWithSymbol
 
-    def code(__self__, lineNumber, line):
+    def codeBasicInstructions(__self__, lineNumber, line):
         line = str(line)
         line = line.replace('\n', '')
 
