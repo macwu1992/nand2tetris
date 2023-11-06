@@ -119,7 +119,10 @@ Example: 4-bit, n=4
 1001 represent -7 in 2's complement
 
 #### Quick method representing -x in implementation of ALU
-(2^N - 1 is all 1's bit array in N dimension, 2^n - 1 = NOT(0))
+(2^N - 1 is all 1's bit array in N dimension.
+Due to 2's complement, adding 2^n equals to adding 0.
+Thus, -1 = 0 - 1 = 2^n - 1 = NOT(0))
+
 Here is a hidden theory in 2's complement: x + NOT(x) = 2^n - 1 -> 
 Thus, there comes an important transformation: 2^n - 1 - x = NOT(x)
 
