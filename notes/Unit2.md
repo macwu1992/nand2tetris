@@ -110,13 +110,77 @@ Example: (-4) + (-7)
 
 1100 + 1101 = 1 1001 the MSB is overflowed. Just drop it, and the result is 1001(9), which is representing (-7). And (-7) is the exact answer for (-4) + (-3)
 
-#### Quick method representing -x
+#### Quick method representing -x in theory
 With input x, how to quickly represent -x?
-Formula: (2^n - 1) - x + 1
+Formula: -x = (2^n - 1) - x + 1
 
 Example: 4-bit, n=4
 -7 = 2^4 - 1 - 7 + 1 = 10000 - 1 - 0111 + 0001 = 1111 - 0111 + 0001 = 1001
 1001 represent -7 in 2's complement
+
+#### Quick method representing -x in implementation of ALU
+(2^N - 1 is all 1's bit array in N dimension, 2^n - 1 = NOT(0))
+Here is a hidden theory in 2's complement: x + NOT(x) = 2^n - 1 -> 
+Thus, there comes an important transformation: 2^n - 1 - x = NOT(x)
+
+And (2^n - 1) - x + 1 is representing -x in 2's complement
+
+Therefore,
+-x = (2^n - 1) - x + 1
+   = (2^n - 1) - (x - 1)
+   = NOT(x - 1)
+
+So, by getting x - 1 and performing NOT operation on it, the -x can be retrieved.
+
+In ALU's implementation, how to get (x - 1) by "NOT" and "ADD" ?
+In 2's complement, it can be done by adding 2^n on it without changing its value:
+```2^n + x - 1```
+
+2^n + x - 1
+    = x + 2^n - 1
+    = 2^n - 1 + x
+    = 2^n + x - 1
+
+Since x can never exceed the 2^n, 2^n + x - 1 is actually (2^n + x - 1) mod 2^n:
+(2^n + x - 1) mod 2^n
+    = 0 + x - 1
+    = x - 1
+-> x - 1 = 2^n + x - 1
+
+So, in ALU's implementation, -x can be transformed, with (2^n - 1) denoting NOT(0):
+-x = (2^n - 1) - x + 1
+   = (2^n - 1) - (x - 1)
+   = NOT(x - 1)
+   = NOT(2^n + x - 1)
+   = NOT(2^n - 1 + x)
+   -> NOT(NOT(0) ADD x)
+
+Example:
+
+// Compute -x
+set zx 0,
+set nx 0,
+set zy 1,
+set ny 1, // get all 1's N array -> 2^n - 1
+set f  1, // perform x + 2^n - 1
+set no 1, // perform NOT(x + 2^n - 1)
+
+1 - 1 = 0 = 0000
+NOT(0) = 1111 = -1
+
+Similarly, x - y can be represented as NOT(NOT(x) + y):
+x - y = 2^n - 1 - 2^n + 1 + x - y
+      = 2^n - 1 - (2^n - 1 - x + y)
+      = NOT(2^n - 1 - x + y)
+      = NOT(NOT(x) + y)
+      -> NOT(NOT(x) ADD y)
+
+And y - x can be represented as NOT(NOT(y) + x):
+y - x = 2^n - 1 - 2^n + 1 + y - x
+      = 2^n - 1 - (2^n - 1 - y + x)
+      = NOT(2^n - 1 - y + x)
+      = NOT(NOT(y) + x)
+      -> NOT(NOT(y) ADD x)
 
 There is a quicker way to accomplish +1 in the formula:
 ???? + 0001 -> ? + 1 : if ? is 1, carry=1, and move to next position; is ? is 0, carry=0, out=1 stop the process.
